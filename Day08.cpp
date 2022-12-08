@@ -20,10 +20,90 @@ int Day08::GetDayInt()
 
 string Day08::GetDayString()
 {
-	return "13";
+	return "08";
 }
 
 void Day08::Parse()
 {
+	int height = m_FileContents.size()-1;
+	int width = m_FileContents[0].size();
+	m_Part1 += height * 2;
+	m_Part1 += (width - 2) * 2;
 
+	for (int row = 1; row < m_FileContents.size() - 1; row++)
+	{
+		for (int col = 1; col < m_FileContents[row].size() - 1; col++)
+		{
+			int curr = int(m_FileContents[row][col]) - 48;
+			bool showing = true;
+
+			// Search above
+			for (int above = row-1; above >= 0; above--)
+			{
+				//int val = int(m_FileContents[above][col]) - 48;
+				if (int(m_FileContents[above][col]) - 48 >= curr)
+				{
+					showing = false;
+					break;
+				}
+			}
+
+			if (showing)
+			{
+				m_Part1++;
+				continue;
+			}
+			showing = true;
+
+			// Search below
+			for (int below = row+1; below <= m_FileContents.size()-1; below++)
+			{
+				if (int(m_FileContents[below][col]) - 48 >= curr)
+				{
+					showing = false;
+					break;
+				}
+			}
+
+			if (showing)
+			{
+				m_Part1++;
+				continue;
+			}
+			showing = true;
+
+			// Search left
+			for (int left = col-1; left >= 0; left--)
+			{
+				if (int(m_FileContents[row][left]) - 48 >= curr)
+				{
+					showing = false;
+					break;
+				}
+			}
+
+			if (showing)
+			{
+				m_Part1++;
+				continue;
+			}
+			showing = true;
+			
+			// Search right
+			for (int right = col + 1; right <= m_FileContents.size() - 1; right++)
+			{
+				if (int(m_FileContents[row][right]) - 48 >= curr)
+				{
+					showing = false;
+					break;
+				}
+			}
+
+			if (showing)
+			{
+				m_Part1++;
+				continue;
+			}
+		}
+	}
 }

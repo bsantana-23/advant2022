@@ -119,66 +119,49 @@ void Day08::Parse()
 			int l{ 0 };
 			int r{ 0 };
 			int highest_score{ 0 };
-			int temp{ 0 };
 
 			// Search above
 			for (int above = row - 1; above >= 0; above--)
 			{
 				//int val = int(m_FileContents[above][col]) - 48;
+				u++;
 				if (int(m_FileContents[above][col]) - 48 >= curr)
 				{
-					u++;
 					break;
-				}
-				else
-				{
-					u++;
 				}
 			}
 
 			// Search below
-			for (int below = row + 1; below <= m_FileContents.size() - 1; below++)
+			for (int below = row + 1; below < m_FileContents.size() - 1; below++)
 			{
+				d++;
 				if (int(m_FileContents[below][col]) - 48 >= curr)
 				{
-					d++;
 					break;
-				}
-				else
-				{
-					d++;
-				}
+				}				
 			}
 
 			// Search left
 			for (int left = col - 1; left >= 0; left--)
 			{
+				l++;
 				if (int(m_FileContents[row][left]) - 48 >= curr)
 				{
-					l++;
 					break;
-				}
-				else
-				{
-					l++;
-				}
+				}				
 			}
 
 			// Search right
-			for (int right = col + 1; right <= m_FileContents.size() - 1; right++)
+			for (int right = col + 1; right < m_FileContents.size() - 1; right++)
 			{
+				r++;
 				if (int(m_FileContents[row][right]) - 48 >= curr)
 				{
-					r++;
 					break;
-				}
-				else
-				{
-					r++;
-				}
+				}				
 			}
 
-			int scenic_score = l * r * u * d;
+			unsigned int scenic_score = l * r * u * d;
 			if (scenic_score > m_Part2)
 			{
 				m_Part2 = scenic_score;

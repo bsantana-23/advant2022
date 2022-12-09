@@ -32,4 +32,7 @@ public:
 	 */
 	std::string GetDayString();
 private:
+	void AdjustTail(std::pair<int, int> head, std::pair<int, int>& tail);
+	void AdjustLink(std::pair<int, int> head, std::vector<std::pair<int, int>> &link, std::map<std::pair<int, int>, int> &visited);
+
 };

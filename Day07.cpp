@@ -32,14 +32,24 @@ struct node
 	int size;
 };
 
+struct directory_tree
+{
+	string name;
+	string type; // dir, file
+	std::vector<struct directory_tree> parent;
+	std::vector<struct directory_tree> list;
+	int size;
+};
+
 void Day07::Parse()
 {
 	string home{ '/' };
 	string name{};
 	string cmd{};
-	std::vector<struct node> directory{};
-	node curr_node{};
-	node head{};
+	std::vector<struct directory_tree> directory{};
+	directory_tree curr_node{};
+	directory_tree n;
+	directory_tree head{};
 
 	for (int row = 0; row < m_FileContents.size(); row++)
 	{
@@ -59,7 +69,6 @@ void Day07::Parse()
 					
 					if (curr_node.name == "")
 					{
-						node n;
 						n.name = name;
 						n.type = "dir";
 						n.size = 0;
@@ -73,14 +82,15 @@ void Day07::Parse()
 					}
 					else if (name == "..")
 					{
-						for (int i = 0; i < curr_node.list.size(); i++)
+						curr_node = curr_node.parent[0];
+						/*for (int i = 0; i < curr_node.list.size(); i++)
 						{
-							if (curr_node.parent == curr_node.list[i].name)
+							if (curr_node.parent.name == curr_node.list[i].name)
 							{
 								curr_node = curr_node.list[i];
 								break;
 							}
-						}
+						}*/
 						break;
 					}
 					else
@@ -110,11 +120,11 @@ void Day07::Parse()
 						{
 							name = m_FileContents[i].substr(4, m_FileContents[i].size() - 4);
 							
-							node n;
 							n.name = name;
 							n.type = "dir";
 							n.size = 0;
-							n.parent = curr_node.name;
+							if(n.parent.size() > 0) n.parent.pop_back();
+							n.parent.push_back(curr_node);
 
 							curr_node.list.push_back(n);
 						}
@@ -127,11 +137,11 @@ void Day07::Parse()
 							{
 
 							}
-							node n;
 							n.type = "file";
 							n.size = stoi(m_FileContents[i].substr(0, idx));
 							n.name = m_FileContents[i].substr(idx, m_FileContents[i].size() - idx);
-							n.parent = curr_node.name;
+							if (n.parent.size() > 0) n.parent.pop_back();
+							n.parent.push_back(curr_node);
 
 							curr_node.list.push_back(n);
 						}

@@ -54,10 +54,6 @@ void Day07::Parse()
 
 	for (int row = 0; row < m_FileContents.size(); row++)
 	{
-		if (row == m_FileContents.size() - 1)
-		{
-			cout << "l" << endl;
-		}
 		for (int col = 0; col < m_FileContents[row].size(); col++)
 		{
 			if (col == 0 && m_FileContents[row][col] == '$')
@@ -169,7 +165,6 @@ void Day07::Parse()
 	DeleteSmallest(*head, need_space);
 	
 }
-
 int Day07::countSize(struct node &tree)
 {
 	unsigned int used_space{ 0 };

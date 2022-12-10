@@ -77,7 +77,7 @@ protected:
 	int m_Part1;
 
 	/// Part 2 answer
-	unsigned long long int m_Part2;
+	unsigned int m_Part2;
 
 	/// start time for execution
 	std::chrono::steady_clock::time_point start;

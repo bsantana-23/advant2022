@@ -32,4 +32,7 @@ public:
 	 */
 	std::string GetDayString();
 private:
+	int countSize(struct node& tree);
+	int DeleteSmallest(struct node& tree, int diff);
+	std::vector<int> delete_dirs;
 };

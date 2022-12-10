@@ -27,7 +27,7 @@ struct node
 {
 	string name;
 	string type; // dir, file
-	string parent;
+	struct node *parent;
 	std::vector<struct node> list;
 	int size;
 };
@@ -47,9 +47,10 @@ void Day07::Parse()
 	string name{};
 	string cmd{};
 	std::vector<struct directory_tree> directory{};
-	directory_tree curr_node{};
-	directory_tree n;
-	directory_tree head{};
+	struct node *curr_node = new node;
+	//directory_tree n;
+	struct node *head{};
+	struct node n;
 
 	for (int row = 0; row < m_FileContents.size(); row++)
 	{
@@ -67,13 +68,14 @@ void Day07::Parse()
 				{
 					name = m_FileContents[row].substr(5, m_FileContents[row].size()-5);
 					
-					if (curr_node.name == "")
-					{
+					if (curr_node->name == "")
+					{						
 						n.name = name;
 						n.type = "dir";
 						n.size = 0;
-						curr_node = n;
-						head = n;
+						n.parent = NULL;
+						curr_node = &n;
+						head = &n;
 					}
 
 					if (name == home)
@@ -82,7 +84,7 @@ void Day07::Parse()
 					}
 					else if (name == "..")
 					{
-						curr_node = curr_node.parent[0];
+						curr_node = (curr_node->parent);
 						/*for (int i = 0; i < curr_node.list.size(); i++)
 						{
 							if (curr_node.parent.name == curr_node.list[i].name)
@@ -95,11 +97,11 @@ void Day07::Parse()
 					}
 					else
 					{
-						for (int i = 0; i < curr_node.list.size(); i++)
+						for (int i = 0; i < curr_node->list.size(); i++)
 						{
-							if (name == curr_node.list[i].name)
+							if (name == curr_node->list[i].name)
 							{
-								curr_node = curr_node.list[i];
+								curr_node = &(curr_node->list[i]);
 								break;
 							}
 							else 
@@ -119,14 +121,14 @@ void Day07::Parse()
 						if (m_FileContents[i][0] == 'd')
 						{
 							name = m_FileContents[i].substr(4, m_FileContents[i].size() - 4);
-							
+							struct node n;
 							n.name = name;
 							n.type = "dir";
 							n.size = 0;
-							if(n.parent.size() > 0) n.parent.pop_back();
-							n.parent.push_back(curr_node);
-
-							curr_node.list.push_back(n);
+							//if(n.parent.size() > 0) n.parent.pop_back();
+							//n.parent.push_back(curr_node);
+							n.parent = curr_node;
+							curr_node->list.push_back(n);
 						}
 
 						// if it ls a file
@@ -137,13 +139,14 @@ void Day07::Parse()
 							{
 
 							}
+							struct node n;
 							n.type = "file";
 							n.size = stoi(m_FileContents[i].substr(0, idx));
 							n.name = m_FileContents[i].substr(idx, m_FileContents[i].size() - idx);
-							if (n.parent.size() > 0) n.parent.pop_back();
-							n.parent.push_back(curr_node);
-
-							curr_node.list.push_back(n);
+							/*if (n.parent.size() > 0) n.parent.pop_back();
+							n.parent.push_back(curr_node);*/
+							n.parent = curr_node;
+							curr_node->list.push_back(n);
 						}
 					}
 					row = i-1;
@@ -153,4 +156,86 @@ void Day07::Parse()
 		}
 		cout << m_FileContents[row] << endl;
 	}
+	cout << " Finished building tree" << endl;
+	
+	m_Part2 = 100000000;
+	int used_space{ countSize(*head) };
+	
+	// Part 2
+	int total_space{ 70000000 };
+	int update_size{ 30000000 };
+	int free_space{ total_space - used_space };
+	int need_space{ update_size - free_space };
+	DeleteSmallest(*head, need_space);
+	
+}
+
+int Day07::countSize(struct node &tree)
+{
+	unsigned int used_space{ 0 };
+
+	for (struct node file : tree.list)
+	{
+		if (file.type == "file")
+		{
+			// Part 1
+			/*if (used_space > 100000)
+			{
+				continue;
+			}
+			else
+			{
+				used_space += file.size;
+			}*/
+
+			// Part 2
+			used_space += file.size;
+		}
+		else if (file.type == "dir")
+		{
+			used_space += countSize(file);
+		}
+		else
+		{
+			cout << "who the hell are you" << endl;
+		}
+	}
+
+	if (used_space <= 100000)
+	{
+		m_Part1 += used_space;
+	}
+
+	return used_space;
+}
+
+int Day07::DeleteSmallest(struct node &tree, int diff)
+{
+	unsigned int used_space{ 0 };
+	
+	for (struct node file : tree.list)
+	{
+		if (file.type == "file")
+		{
+			used_space += file.size;
+		}
+		else if (file.type == "dir")
+		{
+			used_space += DeleteSmallest(file, diff);
+		}
+		else
+		{
+			cout << "who the hell are you" << endl;
+		}
+	}
+
+	if (used_space >= diff)
+	{
+		if (used_space < m_Part2)
+		{
+			m_Part2 = used_space;
+		}
+	}
+
+	return used_space;
 }

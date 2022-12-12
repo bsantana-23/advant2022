@@ -31,11 +31,13 @@ void Day11::Parse()
 		vector<unsigned int> items;
 		string op{};
 		string worry_level{};
-		int test{};
+		unsigned long long int test{};
 		int if_true{};
 		int if_false{};
 		unsigned int counter{ 0 };
 	};
+
+	int magic_number{1};
 
 	vector<struct Monkey> monkeys{};
 	int i = 0;
@@ -67,6 +69,7 @@ void Day11::Parse()
 			// Get test value
 			idx = 21;
 			m.test = stoi(m_FileContents[row].substr(idx, m_FileContents[row].size() - idx));
+			magic_number *= m.test;
 			row++;
 
 			// Get if true value
@@ -96,7 +99,7 @@ void Day11::Parse()
 				continue;
 			}
 
-			for (unsigned int item : monkey.items)
+			for (unsigned long long item : monkey.items)
 			{				
 				monkey.counter++;
 
@@ -123,6 +126,8 @@ void Day11::Parse()
 
 				// Divide by 3 and floor it
 				//item = floor(item / 3);
+				
+				item = item % magic_number;
 
 				// Test it
 				if (item % monkey.test == 0)
@@ -135,6 +140,10 @@ void Day11::Parse()
 				}
 			}
 			monkey.items.clear();
+		}
+		if (round == rounds - 1)
+		{
+			cout << endl;
 		}
 	}
 
@@ -160,6 +169,6 @@ void Day11::Parse()
 		}
 	}
 
-	unsigned long long monkey_business = top * second;
+	unsigned long long int monkey_business = top * second;
 	m_Part1 = monkey_business;
 }

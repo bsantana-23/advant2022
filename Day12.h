@@ -32,4 +32,5 @@ public:
 	 */
 	std::string GetDayString();
 private:
+	bool SearchPath(std::pair<int, int> pos, std::pair<int, int> end, int& steps, std::map<std::pair<int, int>, int>& visited);
 };

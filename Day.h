@@ -74,7 +74,7 @@ protected:
 	std::vector<std::string> m_FileContents;
 
 	/// Part 1 answer
-	int m_Part1;
+	unsigned int m_Part1;
 
 	/// Part 2 answer
 	unsigned int m_Part2;

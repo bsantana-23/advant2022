@@ -32,4 +32,6 @@ public:
 	 */
 	std::string GetDayString();
 private:
+
+	std::vector<int> FindPair(std::string &row, std::vector<std::vector<int>>& main_list);
 };

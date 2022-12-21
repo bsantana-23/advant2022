@@ -32,4 +32,13 @@ public:
 	 */
 	std::string GetDayString();
 private:
+	struct Cube
+	{
+		int sides_uncovered{ 6 };
+		int x, y, z{ 0 };
+	};
+
+	std::vector<Cube> path{};
+
+	bool BoundSearch(Cube& air, std::vector<Cube>& cubes);
 };
